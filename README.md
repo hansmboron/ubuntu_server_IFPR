@@ -121,3 +121,11 @@ $ sudo nano /etc/samba/smb.conf
   create mask = 0775
   directory = 0775
 ```
+`Ctrl + O ` depois ` Enter ` para gravar e ` Ctrl + X ` para sair!
+
+## 9. Reniciar o servidor
+```bash
+$ sudo systemctl restart smbd.service nmbd.service
+```
+
+## 10. Mapear Arquivos pelo gerenciador de arquivos
