@@ -1,69 +1,123 @@
-# ubuntu_server
+# Configurar Servidor Ubuntu com Samba
 
-## Build Setup
+## 1. Instalar Servidor Ubuntu
+ Clique aqui para baixar o servidor Ubuntu 20.04: [link](https://ubuntu.com/download/server)
+
+## 2. Configurar Samba no Ubuntu
+É possível conectar no servidor Ubuntu utilizando SSH, caso esteja usando Windows pode usar algum programa como o Putty
 
 ```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
+# subistitua o IP do comando pelo seu IP
+# que você pode consultar usando o comando ifconfig
+$ ssh ubuntu@10.33.0.241
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+## 3. Instalar Samba
+```bash
+$ sudo apt install samba
+```
 
-## Special Directories
+## 4. Criar Pastas 
+```bash
+# criar pasta samba na home
+$ mkdir samba
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+# entrar na pasta samba
+$ cd samba/
 
-### `assets`
+# criar pastas
+$ mkdir expedicao fabrica financeiro geral rh
+```
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+## 5. Adicionar Usuários
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+```bash
+$ sudo adduser expedicao
+```
+```bash
+$ sudo adduser fabrica
+```
+```bash
+$ sudo adduser financeiro
+```
+```bash
+$ sudo adduser geral
+```
+```bash
+$ sudo adduser rh
+```
 
-### `components`
+## 6. Criar backup do arquivo de configuração do Samba
+```bash
+$ sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bkp
+```
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+## 7. Criar Usuários do Samba
+```bash
+$ sudo smbpasswd -a expedicao
+...
+$ sudo smbpasswd -a rh
+```
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
+## 8. Configurar o arquivo smb.conf
+```bash
+# vamos utilizar o editor nano
+$ sudo nano /etc/samba/smb.conf
+```
 
-### `layouts`
+```
+[rh]
+  comment = Arquivos do RH
+  path = /home/ubuntu/samba/rh
+  public = no
+  browseable = yes
+  writable = yes
+  guest ok = no
+  read only = no
+  read list = rh
+  create mask = 0775
+  directory = 0775
 
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
+[financeiro]
+  path = /home/ubuntu/samba/financeiro
+  public = no 
+  browseable = yes
+  writable = yes
+  guest ok = no
+  read only = no  
+  read list = financeiro
+  create mask = 0775
+  directory = 0775
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+[expedicao]
+  path = /home/ubuntu/samba/expedicao
+  public = no 
+  browseable = yes
+  writable = yes
+  guest ok = no
+  read only = no  
+  read list = expedicao
+  create mask = 0775
+  directory = 0775
 
+[fabrica]
+  path = /home/ubuntu/samba/fabrica
+  public = no 
+  browseable = yes
+  writable = yes
+  guest ok = no
+  read only = no  
+  read list = fabrica
+  create mask = 0775
+  directory = 0775
 
-### `pages`
-
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
-
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+[geral]
+  path = /home/ubuntu/samba/geral
+  public = yes
+  browseable = yes
+  writable = yes
+  guest ok = yes
+  read only = no  
+  create mask = 0775
+  directory = 0775
+```
