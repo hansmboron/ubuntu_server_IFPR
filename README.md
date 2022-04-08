@@ -9,6 +9,7 @@
 ```bash
 # subistitua o IP do comando pelo seu IP
 # que você pode consultar usando o comando ifconfig
+# no Windows pode usar programas como o Putty por exemplo
 $ ssh ubuntu@10.33.0.241
 ```
 
@@ -55,19 +56,20 @@ $ sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bkp
 ## 7. Criar Usuários do Samba
 ```bash
 $ sudo smbpasswd -a expedicao
+# o parâmetro '-a' significa que quero adicionar um usuário ao samba
 ...
 $ sudo smbpasswd -a rh
 ```
 
 ## 8. Configurar o arquivo smb.conf
 ```bash
-# vamos utilizar o editor nano
+# vamos utilizar o editor nano para mexer nas configurações do samba
 $ sudo nano /etc/samba/smb.conf
 ```
 
 ```
 [rh]
-  comment = Arquivos do RH
+  comment = Arquivos do RH 
   path = /home/ubuntu/samba/rh
   public = no
   browseable = yes
@@ -129,3 +131,5 @@ $ sudo systemctl restart smbd.service nmbd.service
 ```
 
 ## 10. Mapear Arquivos pelo gerenciador de arquivos
+![screenshot Server](./static/server_files.png)
+![screenshot desktop view](./static/server_files2.png)
